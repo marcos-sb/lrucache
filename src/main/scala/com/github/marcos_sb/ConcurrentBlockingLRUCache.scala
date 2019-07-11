@@ -2,12 +2,12 @@ package com.github.marcos_sb
 
 import scala.collection.mutable
 
-class LRUCache[K,V] (val capacity: Int = 1, val buckets: Int = 1) {
+class ConcurrentBlockingLRUCache[K,V](val capacity: Int = 1, val buckets: Int = 1) {
   if (capacity < 1) throw new IllegalArgumentException("Capacity cannot be less than 1")
   if (buckets < 1) throw new IllegalArgumentException("Buckets cannot be less than 1")
 
   val singleCacheCapacity: Int = if (capacity/buckets == 0) 1 else capacity/buckets
-  val shards: Array[SingleLRUCache] = Array.fill(buckets)(new SingleLRUCache(singleCacheCapacity))
+  val shards: Array[LRUCache] = Array.fill(buckets)(new LRUCache(singleCacheCapacity))
 
   def add(key: K, value: V): V = {
     val shard = math.abs(key.hashCode()) % shards.length
@@ -27,7 +27,8 @@ class LRUCache[K,V] (val capacity: Int = 1, val buckets: Int = 1) {
     shards.mkString("|")
   }
 
-  class SingleLRUCache (val capacity: Int) {
+  class LRUCache(val capacity: Int) {
+    val a = Map[Int,Int]()
     case class Node(key: K, value: V) {
       var prev, next: Node = _
       override def toString: String = {

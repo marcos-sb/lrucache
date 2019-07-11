@@ -2,9 +2,9 @@ package com.github.marcos_sb
 
 import org.scalatest.FunSuite
 
-class LRUCacheTest extends FunSuite {
+class ConcurrentBlockingLRUCacheTest extends FunSuite {
   test("add one element and get it") {
-    val cache: LRUCache[Int, String] = new LRUCache
+    val cache: ConcurrentBlockingLRUCache[Int, String] = new ConcurrentBlockingLRUCache
     val elem = (0, "zero")
     cache.add(elem)
     val cachedElem = cache.get(elem._1).get
@@ -12,13 +12,13 @@ class LRUCacheTest extends FunSuite {
   }
 
   test("get inexistent element") {
-    val cache: LRUCache[Int, String] = new LRUCache
+    val cache: ConcurrentBlockingLRUCache[Int, String] = new ConcurrentBlockingLRUCache
     val cachedElem = cache.get(0)
     assert(cachedElem == Option.empty)
   }
 
   test("add two elements, expire/remove oldest") {
-    val cache: LRUCache[Int, String] = new LRUCache
+    val cache: ConcurrentBlockingLRUCache[Int, String] = new ConcurrentBlockingLRUCache
     val elem0 = (0, "zero")
     val elem1 = (1, "one")
     cache.add(elem0)
@@ -29,13 +29,13 @@ class LRUCacheTest extends FunSuite {
 
   test("capacity at least 1 or die") {
     assertThrows[IllegalArgumentException] {
-      val cache: LRUCache[Int, String] = new LRUCache(0)
+      val cache: ConcurrentBlockingLRUCache[Int, String] = new ConcurrentBlockingLRUCache(0)
     }
   }
 
   test("buckets at least 1 or die") {
     assertThrows[IllegalArgumentException] {
-      val cache: LRUCache[Int, String] = new LRUCache(buckets = 0)
+      val cache: ConcurrentBlockingLRUCache[Int, String] = new ConcurrentBlockingLRUCache(buckets = 0)
     }
   }
 }
