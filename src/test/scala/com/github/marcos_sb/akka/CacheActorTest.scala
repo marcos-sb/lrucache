@@ -26,7 +26,7 @@ class CacheActorTest
       val cacheActor = system.actorOf(CacheActor.props[Int, Int](1), "cache")
       val es = ExecutionContext.fromExecutorService(
         new ScheduledThreadPoolExecutor(40))
-      val start = System.nanoTime();
+      val start = System.nanoTime()
       val s = for (i <- 1 to 10000) yield Future {
         cacheActor ! AddRequest(i, i, i)
       } (es)
